@@ -1,0 +1,13 @@
+# Configuration for Motorola Edge 30 Fusion (tundra, SM8350),
+# chainloaded from the stock bootloader (fastboot boot).
+
+#include "qcom_defconfig"
+
+CONFIG_DEFAULT_DEVICE_TREE="qcom/sm8350-motorola-tundra"
+CONFIG_CLK_QCOM_SM8350=y
+
+CONFIG_DEBUG_UART=y
+CONFIG_DEBUG_UART_ANNOUNCE=y
+CONFIG_DEBUG_UART_BASE=0x98c000
+CONFIG_DEBUG_UART_MSM_GENI=y
+CONFIG_DEBUG_UART_CLOCK=14745600
