@@ -2,9 +2,11 @@
 # chainloaded from the stock bootloader (fastboot boot).
 
 #include "qcom_defconfig"
+#include "board/qualcomm/qcom-phone.config"
 
 CONFIG_DEFAULT_DEVICE_TREE="qcom/sm8350-motorola-xpeng"
 CONFIG_CLK_QCOM_SM8350=y
+CONFIG_PREBOOT="scsi scan; run serial_gadget"
 
 CONFIG_DEBUG_UART=y
 CONFIG_DEBUG_UART_ANNOUNCE=y

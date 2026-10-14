@@ -18,12 +18,24 @@
 	bootph-all;
 };
 
+&usb_1 {
+	bootph-all;
+};
+
 &usb_1_hsphy {
+	bootph-all;
+};
+
+&usb_1_qmpphy {
 	bootph-all;
 };
 
 &usb_1_dwc3 {
 	bootph-all;
+};
+
+&mdss {
+	status = "disabled";
 };
 
 &rpmhcc {
