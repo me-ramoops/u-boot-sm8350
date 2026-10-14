@@ -26,6 +26,7 @@
 
 &uart2 {
 	bootph-all;
+	status = "disabled";
 };
 
 &usb_1 {

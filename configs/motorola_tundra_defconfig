@@ -6,4 +6,5 @@
 
 CONFIG_DEFAULT_DEVICE_TREE="qcom/sm8350-motorola-tundra"
 CONFIG_CLK_QCOM_SM8350=y
-CONFIG_PREBOOT="run serial_gadget; scsi scan"
+CONFIG_BOARD_EARLY_INIT_R=y
+CONFIG_PREBOOT="run serial_gadget; setenv bootcmd 'echo BOOTOK; run menucmd'"
