@@ -11,10 +11,7 @@
 #define pr_fmt(fmt) "QCOM: " fmt
 
 #include <asm/psci.h>
-#include <command.h>
-#include <cpu_func.h>
 #include <dm/ofnode.h>
-#include <hang.h>
 #include <env.h>
 #include <fdt_support.h>
 #include <init.h>
@@ -29,25 +26,6 @@
 #include <time.h>
 
 #include "qcom-priv.h"
-
-#define SPLASH_FB_BASE 0xe1000000
-#define SPLASH_FB_W 1080
-#define SPLASH_FB_H 2460
-#define SPLASH_FB_STRIDE 4320
-
-static void paint_stage(int n)
-{
-	volatile u32 *p = (volatile u32 *)SPLASH_FB_BASE;
-	int x, y, i = 0;
-
-	for (y = 0; y < SPLASH_FB_H; y++) {
-		int bar = (y >= 100) ? (y - 100) / 250 : -1;
-		u32 v = (bar >= 0 && bar < n && (y - 100 - bar * 250) < 120) ?
-			0xffffffff : 0x00000000;
-		for (x = 0; x < SPLASH_FB_W; x++)
-			p[i++] = v;
-	}
-}
 
 enum qcom_boot_source qcom_boot_source __section(".data") = 0;
 enum qcom_memmap_source qcom_memmap_source __section(".data") = 0;
@@ -105,9 +83,6 @@ int board_fdt_blob_setup(void **fdtp)
 	struct fdt_header *external_fdt, *internal_fdt;
 	bool internal_valid, external_valid;
 	int ret = -ENODATA;
-
-	/* DEBUG: stage 1 */
-	paint_stage(1);
 
 	internal_fdt = (struct fdt_header *)*fdtp;
 	external_fdt = (struct fdt_header *)get_prev_bl_fdt_addr();
@@ -174,17 +149,8 @@ void __weak qcom_board_init(void)
 {
 }
 
-int board_early_init_r(void)
-{
-	/* DEBUG: stage 3 */
-	paint_stage(3);
-	return 0;
-}
-
 int board_init(void)
 {
-	/* DEBUG: stage 2 */
-	paint_stage(2);
 #if CONFIG_IS_ENABLED(SYSRESET_PSCI)
 	show_psci_version();
 #endif
@@ -427,11 +393,6 @@ void __weak qcom_late_init(void)
 /* Stolen from arch/arm/mach-apple/board.c */
 int board_late_init(void)
 {
-	/* DEBUG: stage 4 */
-	paint_stage(4);
-	run_command("run serial_gadget", 0);
-	/* DEBUG: stage 5 = usb gadget started, continue to menu */
-	paint_stage(5);
 	u32 status = 0, fdt_status = 0;
 	phys_addr_t addr;
 	struct fdt_header *fdt_blob = (struct fdt_header *)gd->fdt_blob;

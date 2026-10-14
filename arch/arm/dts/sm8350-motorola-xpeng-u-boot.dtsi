@@ -30,6 +30,7 @@
 };
 
 &usb_1 {
+	qcom,select-utmi-as-pipe-clk;
 	bootph-all;
 };
 
@@ -38,11 +39,27 @@
 };
 
 &usb_1_qmpphy {
-	bootph-all;
+	status = "disabled";
 };
 
 &usb_1_dwc3 {
+	dr_mode = "peripheral";
+	maximum-speed = "high-speed";
+	phys = <&usb_1_hsphy>;
+	phy-names = "usb2-phy";
 	bootph-all;
+};
+
+&usb_2 {
+	status = "disabled";
+};
+
+&usb_2_hsphy {
+	status = "disabled";
+};
+
+&usb_2_qmpphy {
+	status = "disabled";
 };
 
 &mdss {
