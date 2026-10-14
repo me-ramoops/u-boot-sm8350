@@ -1,0 +1,46 @@
+name: Build sm8350 u-boot
+
+on:
+  push:
+    branches: [sm8350/latest, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        include:
+          - board: motorola_xpeng
+            dtb: sm8350-motorola-xpeng.dtb
+          - board: motorola_tundra
+            dtb: sm8350-motorola-tundra.dtb
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update -yqq
+          sudo apt-get install -yqq bc bison flex gcc-aarch64-linux-gnu git libgnutls28-dev libssl-dev make python3 python3-pyelftools uuid-dev
+
+      - name: Build ${{ matrix.board }}
+        run: |
+          set -euxo pipefail
+          make CROSS_COMPILE=aarch64-linux-gnu- ${{ matrix.board }}_defconfig
+          make CROSS_COMPILE=aarch64-linux-gnu- -j"$(nproc)"
+          test -s u-boot.bin
+
+      - name: Upload u-boot.bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: u-boot-${{ matrix.board }}
+          path: |
+            u-boot.bin
+            u-boot-nodtb.bin
+            dts/upstream/src/arm64/qcom/${{ matrix.dtb }}
+          if-no-files-found: error
