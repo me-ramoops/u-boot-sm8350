@@ -3,6 +3,16 @@
 / {
 	chosen {
 		stdout-path = "serial0:115200n8";
+		framebuffer0: framebuffer@e1000000 {
+			compatible = "simple-framebuffer";
+			reg = <0x0 0xe1000000 0x0 0xc00000>;
+			width = <1080>;
+			height = <2460>;
+			stride = <4320>;
+			format = "a8b8g8r8";
+			status = "okay";
+			bootph-all;
+		};
 	};
 };
 
